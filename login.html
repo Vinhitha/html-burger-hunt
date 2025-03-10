@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Burger Hunt - Login</title>
+  <style>
+    /* General body styles matching Burger Hunt's design */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      /* Set the background image for the whole page */
+      background: url('https://i.postimg.cc/qMX1JZDs/Screenshot-2025-02-25-182258.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Login Container */
+    .login-container {
+      /* Semi-transparent black background */
+      background: rgba(0, 0, 0, 0.5);
+      padding: 30px 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      color: #fff; /* Make text white for contrast */
+    }
+
+    .login-container h2 {
+      margin-bottom: 20px;
+    }
+
+    /* Input Group Wrapper (for icon positioning) */
+    .input-wrapper {
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    /* Icons on the left or right inside inputs */
+    .icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #333;
+      font-size: 16px;
+      padding: 0 5px;
+    }
+
+    /* User/Lock icons on the left */
+    .left-icon {
+      left: 10px;
+    }
+
+    /* Eye icon on the right */
+    .eye-icon {
+      right: 10px;
+      cursor: pointer;
+    }
+
+    /* Input Fields */
+    .login-container input[type="text"],
+    .login-container input[type="password"] {
+      width: 100%;
+      padding: 12px 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      /* White background for inputs so they're visible on the dark overlay */
+      background-color: #fff;
+      color: #333;
+      /* Extra left padding to avoid overlapping the icon */
+      padding-left: 35px;
+    }
+
+    /* When there's an eye icon on the right, add right padding so text doesn't overlap it */
+    .has-eye-icon {
+      padding-right: 35px;
+    }
+
+    /* Login Button */
+    .login-container button {
+      background-color: #ff4500;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .login-container button:hover {
+      background-color: #e03e00;
+    }
+
+    /* Forgot Password Link */
+    .forgot-password {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .forgot-password a {
+      color: #ff4500;
+      text-decoration: none;
+    }
+
+    .forgot-password a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login to Burger Hunt</h2>
+    <!-- Updated the form action to navigate to bhu.html on login -->
+    <form action="bhu.html" method="GET">
+      
+      <!-- Username Field with User Icon -->
+      <div class="input-wrapper">
+        <!-- Small user symbol (emoji or any symbol) -->
+        <span class="icon left-icon">&#128100;</span>
+        <input type="text" name="username" placeholder="Username" required />
+      </div>
+
+      <!-- Password Field with Lock Icon and Eye Icon -->
+      <div class="input-wrapper">
+        <!-- Lock symbol on the left -->
+        <span class="icon left-icon">&#128274;</span>
+        <!-- Notice the 'id="password"' and 'has-eye-icon' class for toggling -->
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="has-eye-icon"
+          placeholder="Password"
+          required
+        />
+        <!-- Eye symbol on the right -->
+        <span class="icon eye-icon" onclick="togglePasswordVisibility()">&#128065;</span>
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+    <div class="forgot-password">
+      <!-- Link to the reset password page -->
+      <a href="forgot-password.html">Forgot Password?</a>
+    </div>
+  </div>
+
+  <!-- JavaScript to toggle password visibility -->
+  <script>
+    function togglePasswordVisibility() {
+      const passwordField = document.getElementById('password');
+      if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+      } else {
+        passwordField.type = 'password';
+      }
+    }
+  </script>
+</body>
+</html>

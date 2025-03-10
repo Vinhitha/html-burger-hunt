@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cart - Burger Hunt</title>
+  <!-- Same CSS as your original index.html -->
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fdf6e3;
+      color: #333;
+    }
+
+    /* Navbar styling */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ff4500;
+      padding: 10px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .navbar .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar ul li {
+      margin: 0 15px;
+    }
+    .navbar ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    /* Section styling */
+    section {
+      padding: 50px 20px;
+      text-align: center;
+    }
+    .cart-items {
+      margin-top: 20px;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cart-items ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .cart-items ul li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Payment form styling */
+    .payment-form {
+      max-width: 400px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .payment-form input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .payment-form button {
+      background-color: #ff4500;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 18px;
+      border-radius: 5px;
+    }
+    .success-message {
+      color: green;
+      font-weight: bold;
+      display: none;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<form name="f1" action="admin.jsp">
+  <!-- Navbar (same as your index.html) -->
+  <div class="navbar">
+    <div class="logo">Burger Hunt</div>
+    <ul>
+      <li><a href="bhu.html">Home</a></li>
+      <li><a href="bhu.html#about">About</a></li>
+      <li><a href="bhu.html#menu">Menu</a></li>
+      <li><a href="bhu.html#contact">Contact</a></li>
+      <li><a href="cart.html">Cart</a></li>
+    </ul>
+  </div>
+
+  <!-- Cart Section -->
+  <section>
+    <h2>Your Cart</h2>
+    <div class="cart-items">
+      <ul id="cart-list">
+        <!-- Cart items will be loaded here -->
+      </ul>
+      <p>Total: ₹<span id="total">0</span></p>
+    </div>
+
+    <!-- Payment Form -->
+    <div class="payment-form">
+      <h3>Payment Details</h3>
+      <input type="text" id="card-number" placeholder="Card Number" name="T1" required>
+      <input type="text" id="expiry-date" placeholder="Expiry Date" name="T2" required>
+      <input type="text" id="cvv" placeholder="CVV" name="T3" required>
+      
+      <input type="submit" value="Pay Now">
+      <div class="success-message" id="success-message">
+        Payment Successful! Your order is received.
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Load cart from localStorage and display items with their cost.
+    function loadCart() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const cartList = document.getElementById('cart-list');
+      let total = 0;
+      cartList.innerHTML = '';
+
+      if (cart.length === 0) {
+        cartList.innerHTML = '<li style="text-align:center;">YOUR CART IS EMPTY!!</li>';
+      } else {
+        // Define the burger items that should use a default price of ₹100 if no price is set.
+        const burgerItems = ["Classic Cheeseburger", "Spicy BBQ Burger", "Veggie Delight"];
+        cart.forEach(item => {
+          let price = item.price;
+          // If the item is a burger and no price is set, assign default price ₹100.00.
+          if (price === undefined && burgerItems.includes(item.name)) {
+            price = 100;
+          }
+          const itemCost = (price !== undefined) ? price * item.quantity : 0;
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <span>${item.name} (x${item.quantity}) ${price !== undefined ? '@ ₹' + price.toFixed(2) + ' each' : ''}</span>
+            <span>${price !== undefined ? '₹' + itemCost.toFixed(2) : ''}</span>
+          `;
+          cartList.appendChild(li);
+          total += itemCost;
+        });
+      }
+      document.getElementById('total').textContent = total.toFixed(2);
+    }
+
+    // Process payment: validate payment details, clear payment fields if valid, then clear the cart.
+    function processPayment() {
+      const cardNumber = document.getElementById('card-number').value.trim();
+      const expiryDate = document.getElementById('expiry-date').value.trim();
+      const cvv = document.getElementById('cvv').value.trim();
+      
+      if (!cardNumber || !expiryDate || !cvv) {
+        alert("PLEASE FILL THE PAYMENT DETAILS TO ORDER");
+        return; // Do not proceed if any field is empty.
+      }
+
+      // Clear the payment form fields.
+      document.getElementById('card-number').value = "";
+      document.getElementById('expiry-date').value = "";
+      document.getElementById('cvv').value = "";
+      
+      document.getElementById('success-message').style.display = 'block';
+      localStorage.removeItem('cart'); // Clear cart
+      setTimeout(() => {
+        window.location.href = 'bhu.html'; // Redirect to home (bhu.html) after 2 seconds
+      }, 2000);
+    }
+
+    // Load cart when page opens.
+    window.onload = loadCart;
+  </script>
+</form>
+</body>
+</html>

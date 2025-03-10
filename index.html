@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Burger Hunt</title>
+  <style>
+    /* Existing styles (unchanged) */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fdf6e3;
+      color: #333;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ff4500;
+      padding: 10px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .navbar .logo-container {
+      display: flex;
+      align-items: center;
+    }
+    .navbar .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+      margin-right: 10px;
+    }
+    .menu-icon {
+      font-size: 24px;
+      cursor: pointer;
+      color: #fff;
+    }
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar ul li {
+      margin: 0 15px;
+    }
+    .navbar ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+    }
+    .navbar ul li a:hover {
+      color: #000;
+    }
+
+    /* Hero Section */
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 50px 20px;
+      background-color: #fcd6d6;
+      position: relative;
+    }
+    .hero .text {
+      max-width: 50%;
+    }
+    .hero .text h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    .hero .text p {
+      font-size: 18px;
+    }
+    .hero .burger-image {
+      position: absolute;
+      top: 20px;
+      right: 10px;
+      max-width: 400px;
+      mix-blend-mode: multiply;
+    }
+
+    /* Sections */
+    section {
+      padding: 50px 20px;
+      text-align: center;
+    }
+    section h2 {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+    section p {
+      font-size: 18px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    /* About Section */
+    #about {
+      background-image: url("https://i.postimg.cc/RCsdQWyJ/background-bug.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding: 50px 20px;
+      text-align: center;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Menu Section */
+    .menu-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px 0;
+    }
+    .menu-item {
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .menu-item img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .menu-item h3 {
+      margin: 10px 0;
+    }
+
+    /* Cart Controls */
+    .cart-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .cart-controls button {
+      background-color: #ff4500;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+    .cart-controls button:hover {
+      background-color: #e03e00;
+    }
+    .quantity {
+      font-size: 18px;
+      font-weight: bold;
+      min-width: 30px;
+      display: inline-block;
+      text-align: center;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ff4500;
+      color: #fff;
+    }
+
+    /* Cart Section */
+    #cart {
+      background-color: #fcd6d6;
+      padding: 50px 20px;
+      text-align: center;
+    }
+    .cart-items {
+      margin-top: 20px;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cart-items ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .cart-items ul li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cart-items ul li span {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #333;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+      z-index: 999;
+    }
+    .sidebar a {
+      padding: 10px 15px;
+      text-decoration: none;
+      font-size: 18px;
+      color: #fff;
+      display: block;
+      transition: 0.3s;
+    }
+    .sidebar a:hover {
+      background-color: #575757;
+    }
+    .sidebar .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 30px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* Modal Styles for Category Pages */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 800px;
+      border-radius: 8px;
+      position: relative;
+    }
+    .modal-close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .modal-close:hover,
+    .modal-close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .category-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px 0;
+    }
+    .category-item {
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .category-item img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .category-item h3 {
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo-container">
+      <div class="logo">Burger Hunt</div>
+      <div class="menu-icon" onclick="toggleSidebar()">&#8942;</div>
+    </div>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="cart.html">Cart</a></li>
+    </ul>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="close-btn" onclick="toggleSidebar()">&times;</div>
+    <a href="javascript:void(0)" onclick="openCategory('soft-drinks')">Soft Drinks</a>
+    <a href="javascript:void(0)" onclick="openCategory('fries')">Fries</a>
+    <a href="javascript:void(0)" onclick="openCategory('pasta')">Pasta</a>
+    <a href="javascript:void(0)" onclick="openCategory('desserts')">Desserts</a>
+  </div>
+
+  <!-- Hero Section -->
+  <div id="home" class="hero">
+    <div class="text">
+      <h1><center>Welcome to Burger Hunt</center></h1>
+      <p>
+        Experience the ultimate taste of perfection. Discover our delicious and
+        irresistible burgers!
+      </p>
+    </div>
+    <img src="https://i.postimg.cc/Nf1h0hd0/my-burger.jpg" alt="Burger Image" class="burger-image" />
+  </div>
+
+  <!-- About Section -->
+  <section id="about">
+    <h2>About Us</h2>
+    <p>
+      <strong>At Burger Hunt, we are dedicated to delivering the ultimate burger experience.
+      Our journey started with a passion for crafting the juiciest, most flavorful burgers using only the freshest ingredients.
+      From our perfectly grilled patties to our freshly baked buns and carefully selected toppings, every bite is packed with mouthwatering goodness.</strong>
+    </p>
+  </section>
+
+  <!-- Menu Section -->
+  <section id="menu">
+    <h2>Our Menu</h2>
+    <div class="menu-items">
+      <!-- BURGERS: NO PRICE PASSED, WILL DEFAULT TO $10 in cart.html -->
+      <div class="menu-item">
+        <img src="https://i.postimg.cc/kMzY8j2t/Flux-Dev-A-juicy-mouthwatering-cheesy-burger-sits-atop-a-crisp-3-1.jpg" alt="Classic Cheeseburger" />
+        <h3>Classic Cheeseburger</h3>
+        <div class="cart-controls">
+          <button onclick="updateQuantity('Classic Cheeseburger', -1)">-</button>
+          <span class="quantity" id="Classic Cheeseburger-quantity">0</span>
+          <button onclick="updateQuantity('Classic Cheeseburger', 1)">+</button>
+        </div>
+      </div>
+      <div class="menu-item">
+        <img src="https://i.postimg.cc/WzwD2WKf/Flux-Dev-A-juicy-mouthwatering-spicy-BBQ-burger-with-a-beef-pa-0.jpg" alt="Spicy BBQ Burger" />
+        <h3>Spicy BBQ Burger</h3>
+        <div class="cart-controls">
+          <button onclick="updateQuantity('Spicy BBQ Burger', -1)">-</button>
+          <span class="quantity" id="Spicy BBQ Burger-quantity">0</span>
+          <button onclick="updateQuantity('Spicy BBQ Burger', 1)">+</button>
+        </div>
+      </div>
+      <div class="menu-item">
+        <img src="https://i.postimg.cc/MGmgm1CJ/Flux-Dev-A-mouthwatering-highangle-shot-of-a-gigantic-crispy-b-1.jpg" alt="Veggie Delight" />
+        <h3>Veggie Delight</h3>
+        <div class="cart-controls">
+          <button onclick="updateQuantity('Veggie Delight', -1)">-</button>
+          <span class="quantity" id="Veggie Delight-quantity">0</span>
+          <button onclick="updateQuantity('Veggie Delight', 1)">+</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p>
+      If you have any questions, feel free to reach out to us. We'd love to hear from you!
+    </p>
+    <p>Email: contact@burgerhunt.com</p>
+    <p>Phone: +91 720 123-4567</p>
+  </section>
+
+  <!-- Footer -->
+  <div class="footer">
+    &copy; 2025 Burger Hunt. All Rights Reserved.
+  </div>
+
+  <!-- Modal for Category Pages -->
+  <div id="categoryModal" class="modal"></div>
+
+  <script>
+    // Modified updateQuantity function that accepts an optional price parameter
+    function updateQuantity(item, change, price = null) {
+      const quantityElement = document.getElementById(`${item}-quantity`);
+      let quantity = parseInt(quantityElement.textContent);
+      quantity += change;
+      if (quantity < 0) quantity = 0; // Ensure quantity doesn't go below 0
+      quantityElement.textContent = quantity;
+
+      // Update cart in localStorage
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let existingItem = cart.find(i => i.name === item);
+
+      if (quantity > 0) {
+        if (existingItem) {
+          existingItem.quantity = quantity; // Update quantity
+          // If a price is provided, update it
+          if (price !== null) {
+            existingItem.price = price;
+          }
+        } else {
+          // Create a new item
+          let newItem = { name: item, quantity: quantity };
+          if (price !== null) {
+            newItem.price = price;
+          }
+          cart.push(newItem);
+        }
+      } else {
+        // Remove item from cart if quantity is 0
+        cart = cart.filter(i => i.name !== item);
+      }
+
+      // Save updated cart to localStorage
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    // Sidebar functionality
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar.style.width === '250px') {
+        sidebar.style.width = '0';
+      } else {
+        sidebar.style.width = '250px';
+      }
+    }
+
+    // Function to open a category modal with items
+    function openCategory(category) {
+      // Close sidebar if open
+      document.getElementById('sidebar').style.width = '0';
+
+      let items = [];
+      if (category === 'soft-drinks') {
+        items = [
+          { name: "Coca Cola", price: 99.99, image: "https://i.postimg.cc/PqsG4qZP/Screenshot-2025-02-19-210845.png" },
+          { name: "Sprite", price: 89.99, image: "https://i.postimg.cc/nLYPHhD9/Screenshot-2025-02-19-210200.png" },
+          { name: "Fanta", price: 79.99, image: "https://i.postimg.cc/9fLNRFW4/Screenshot-2025-02-19-210408.png" }
+        ];
+      } else if (category === 'fries') {
+        items = [
+          { name: "Regular Fries", price: 129.99, image: "https://i.postimg.cc/jjDSm2kK/Screenshot-2025-02-19-211123.png" },
+          { name: "Curly Fries", price: 229.49, image: "https://i.postimg.cc/GtFJrjz1/Screenshot-2025-02-19-211242.png" },
+          { name: "Sweet Potato Fries", price: 325.99, image: "https://i.postimg.cc/J4TKhpM1/Screenshot-2025-02-19-211428.png" }
+        ];
+      } else if (category === 'pasta') {
+        items = [
+          { name: "Spaghetti Bolognese", price: 200.99, image: "https://i.postimg.cc/zB88fzFH/Screenshot-2025-02-19-211634.png" },
+          { name: "Penne Alfredo", price: 599.99, image: "https://i.postimg.cc/BvMPsVx3/Screenshot-2025-02-19-211809.png" },
+          { name: "Fettuccine Carbonara", price: 490.99, image: "https://i.postimg.cc/fRhhTWK7/Screenshot-2025-02-19-211934.png" }
+        ];
+      } else if (category === 'desserts') {
+        items = [
+          { name: "Chocolate Cake", price: 150.99, image: "https://i.postimg.cc/qvhdpmWK/Screenshot-2025-02-19-212156.png" },
+          { name: "Ice Cream Sundae", price: 180.99, image: "https://i.postimg.cc/J0Y42sBC/Screenshot-2025-02-19-212327.png" },
+          { name: "Apple Pie", price: 123.49, image: "https://i.postimg.cc/XYJDWpGD/Screenshot-2025-02-19-212459.png" }
+        ];
+      }
+
+      // Build modal content
+      let modalHTML = `<span class="modal-close" onclick="closeCategoryModal()">&times;</span>`;
+      // Capitalize first letter and replace hyphen with space for the title
+      const title = category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ');
+      modalHTML += `<h2 style="text-align:center; margin-bottom:20px;">${title}</h2>`;
+      modalHTML += `<div class="category-items">`;
+      items.forEach(item => {
+        modalHTML += `
+          <div class="category-item">
+            <img src="${item.image}" alt="${item.name}">
+            <h3>${item.name}</h3>
+            <p>Price: ₹${item.price.toFixed(2)}</p>
+            <div class="cart-controls">
+              <!-- IMPORTANT: pass item.price as the 3rd argument to updateQuantity -->
+              <button onclick="updateQuantity('${item.name}', -1, ${item.price})">-</button>
+              <span class="quantity" id="${item.name}-quantity">0</span>
+              <button onclick="updateQuantity('${item.name}', 1, ${item.price})">+</button>
+            </div>
+          </div>
+        `;
+      });
+      modalHTML += `</div>`;
+
+      // Insert content into modal and display it
+      const modal = document.getElementById('categoryModal');
+      modal.innerHTML = `<div class="modal-content">${modalHTML}</div>`;
+      modal.style.display = 'block';
+    }
+
+    // Function to close the category modal
+    function closeCategoryModal() {
+      document.getElementById('categoryModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
